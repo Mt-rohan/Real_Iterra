@@ -1,26 +1,30 @@
-@import "tailwindcss";
+/* src/app/globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --bg-start: #F7F8FD;
+  --bg-end: #FFFFFF;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply font-sans text-text-primary bg-gradient-to-b
+    from-[rgb(var(--bg-start))] to-[rgb(var(--bg-end))];
+}
+
+a {
+  @apply text-primary hover:text-primary-dark transition;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply bg-primary hover:bg-primary-dark text-white
+    font-semibold py-2 px-4 rounded-lg shadow-md transition;
+}
+
+.btn-secondary {
+  @apply bg-secondary hover:bg-secondary-dark text-white
+    font-semibold py-2 px-4 rounded-lg shadow-md transition;
 }

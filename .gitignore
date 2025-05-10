@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+firebase-admin-key.json
+firebase-admin-key.json
+.env.local
+firebase-admin-key.json
+node_modules/
+.next/
