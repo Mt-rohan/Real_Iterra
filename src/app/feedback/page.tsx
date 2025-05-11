@@ -3,8 +3,8 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import FeedbackDisplay from '@/components/FeedbackDisplay';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import FeedbackDisplay from '../../components/FeedbackDisplay';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 export default function Feedback() {
   const searchParams = useSearchParams();
