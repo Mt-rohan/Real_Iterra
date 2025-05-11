@@ -21,7 +21,7 @@ export const initializeTF = async (): Promise<void> => {
  */
 export const loadPoseDetectionModel = async (): Promise<poseDetection.PoseDetector> => {
   const model = poseDetection.SupportedModels.BlazePose;
-  const config: poseDetection.BlazePoseModelConfig = {
+  const config: poseDetection.BlazePoseTfjsModelConfig = {
     runtime: 'tfjs',
     modelType: 'full',
   };
