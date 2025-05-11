@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import FeedbackDisplay from "../../../components/FeedbackDisplay";
-import LoadingSpinner from "../../../components/LoadingSpinner";
+import FeedbackDisplay from "../../components/FeedbackDisplay";
+import LoadingSpinner from "../../components/LoadingSpinner";
+
 
 export default function MyUploads() {
   const searchParams = useSearchParams();
