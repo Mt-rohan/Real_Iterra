@@ -4,12 +4,11 @@ const path = require('path');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  images: {
-    domains: ['firebasestorage.googleapis.com'],
+  experimental: {
+    serverActions: true,
   },
-  webpack(config, { isServer }) {
-    // Prevent crashes caused by @mediapipe/pose
-    config.resolve.alias['@mediapipe/pose'] = false;
+  webpack: (config) => {
+    config.resolve.alias['@'] = path.resolve(__dirname, 'src');
     return config;
   },
 };
