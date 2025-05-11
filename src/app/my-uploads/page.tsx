@@ -1,12 +1,11 @@
-// src/app/feedback/page.tsx
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import FeedbackDisplay from "../../../components/FeedbackDisplay";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
-export default function Feedback() {
+export default function MyUploads() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +46,7 @@ export default function Feedback() {
           </p>
           <a
             href="/"
-            className="inline-block px-4 py-2 bg-primary rounded-lg text-white font-medium hover:bg-primary-dark transition"
+            className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 transition"
           >
             Back to Home
           </a>
@@ -59,12 +58,8 @@ export default function Feedback() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-start py-12 px-4">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-text-primary mb-2">
-          Your Tennis Analysis
-        </h1>
-        <p className="text-lg text-text-secondary">
-          Personalized feedback to improve your game
-        </p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Upload</h1>
+        <p className="text-lg text-gray-600">Review your personalized feedback</p>
       </div>
 
       <div className="w-full">
