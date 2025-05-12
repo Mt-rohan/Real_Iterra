@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import admin from "firebase-admin";
+import { adminAuth } from '@/lib/firebase-admin';
 import { OpenAI } from "openai";
 import fs from "fs";
 import path from "path";
