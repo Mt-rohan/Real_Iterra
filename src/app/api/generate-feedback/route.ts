@@ -1,22 +1,11 @@
+// src/app/api/generate-feedback/route.ts
+
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { adminAuth } from '@/lib/firebase-admin';
+import { adminAuth, adminDB } from '@/lib/firebase-admin';
 import { OpenAI } from "openai";
-import fs from "fs";
-import path from "path";
 
-// Load Firebase Admin SDK credentials
-const keyPath = path.join(process.cwd(), "firebase-admin-key.json");
-const serviceAccount = JSON.parse(fs.readFileSync(keyPath, "utf8"));
-
-// Initialize Firebase Admin
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
-
-const db = admin.firestore();
+// OpenAI config
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const DATE_KEY = () => new Date().toISOString().split("T")[0];
 
@@ -26,13 +15,13 @@ async function checkAndIncrement(
   id: string
 ) {
   const ref = col.doc(id);
-  await db.runTransaction(async (tx) => {
+  await adminDB.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
     const count = (snap.data()?.count as number) || 0;
     if (count >= 5) throw new Error("Rate limit exceeded");
     tx.set(ref, {
       count: count + 1,
-      last: admin.firestore.FieldValue.serverTimestamp(),
+      last: adminDB.FieldValue.serverTimestamp(),
     });
   });
 }
@@ -42,10 +31,12 @@ export async function POST(req: NextRequest) {
     const authHeader = req.headers.get("Authorization") || "";
     const match = authHeader.match(/^Bearer (.+)$/);
     if (!match) throw new Error("Unauthorized");
-    const { uid } = await admin.auth().verifyIdToken(match[1]);
 
-    const logs = db.collection("usage-logs").doc(DATE_KEY());
+    const { uid } = await adminAuth.verifyIdToken(match[1]);
+
+    const logs = adminDB.collection("usage-logs").doc(DATE_KEY());
     await checkAndIncrement(logs.collection("uids"), uid);
+
     const ip =
       req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
       req.ip ||
