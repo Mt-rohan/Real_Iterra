@@ -1,4 +1,5 @@
 // src/lib/poseDetection.ts
+// temp change to force rebuild
 
 // 1. Register the WebGL backend so TFJS uses it
 import '@tensorflow/tfjs-backend-webgl';
