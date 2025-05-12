@@ -2,7 +2,7 @@
 
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { adminAuth, adminDB } from '@/lib/firebase-admin';
+import { adminAuth, adminDB, adminFieldValue } from '@/lib/firebase-admin';
 import { OpenAI } from "openai";
 
 // OpenAI config
@@ -21,7 +21,7 @@ async function checkAndIncrement(
     if (count >= 5) throw new Error("Rate limit exceeded");
     tx.set(ref, {
       count: count + 1,
-      last: adminDB.FieldValue.serverTimestamp(),
+      last: adminFieldValue.serverTimestamp(),
     });
   });
 }
