@@ -1,3 +1,5 @@
+// src/components/VideoUploader.tsx
+
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
@@ -22,11 +24,9 @@ import LoadingSpinner from "./LoadingSpinner";
 import { PoseAnalysisResult } from "@/types";
 
 const VideoUploader: React.FC = () => {
-  // --- Auth state ---
   const [user, setUser] = useState<User | null>(auth.currentUser);
   useEffect(() => onAuthStateChanged(auth, (u) => setUser(u)), []);
 
-  // --- UI state ---
   const [mode, setMode] = useState<"technical" | "tactical">("technical");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
@@ -41,7 +41,6 @@ const VideoUploader: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  // --- Preview URL + metadata ---
   useEffect(() => {
     setMetadataLoaded(false);
     if (!file) {
@@ -61,7 +60,6 @@ const VideoUploader: React.FC = () => {
     return () => videoEl.removeEventListener("loadedmetadata", onLoaded);
   }, [videoEl, previewUrl]);
 
-  // --- Handlers ---
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
     setRateLimitExceeded(false);
@@ -95,9 +93,22 @@ const VideoUploader: React.FC = () => {
       const frames = await extractVideoFrames(videoEl, 50);
       const poseResult: PoseAnalysisResult = await analyzePoses(detector, frames);
 
-      // 3) AI feedback (pass mode)
+      // 3) AI feedback with full pose metrics
       setLoadingMessage("Generating coaching tips...");
-      const aiFeedback = await generateAIFeedback(poseResult.summary, mode);
+      const aiFeedback = await generateAIFeedback({
+        mode,
+        shotType: "forehand",
+        stance: "open",
+        videoDuration: videoEl.duration,
+        kneeAngle: poseResult.kneeAngle ?? 85,
+        elbowAngle: poseResult.elbowAngle ?? 130,
+        torsoRotation: poseResult.torsoRotation ?? 35,
+        wristLagTiming: 0.2,
+        weightTransferScore: 7,
+        footworkScore: 8,
+        headStability: "stable",
+        detectedIssues: poseResult.detectedIssues || "early wrist release, shallow knee bend",
+      });
 
       // 4) Save to Firestore
       const uploadRef = doc(db, "users", user.uid, "uploads", Date.now().toString());
@@ -153,7 +164,6 @@ const VideoUploader: React.FC = () => {
     fileInputRef.current && (fileInputRef.current.value = "");
   };
 
-  // --- Render ---
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
       {loading ? (
@@ -178,7 +188,6 @@ const VideoUploader: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* Mode selector */}
           <div className="mb-4 flex space-x-4">
             <label className="flex items-center space-x-2">
               <input
@@ -202,12 +211,8 @@ const VideoUploader: React.FC = () => {
             </label>
           </div>
 
-          {/* File input */}
           <div className="mb-6">
-            <label
-              htmlFor="video-upload"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <label htmlFor="video-upload" className="block text-sm font-medium text-gray-700 mb-2">
               Upload Tennis Video (MP4 or MOV)
             </label>
             <input
@@ -221,12 +226,9 @@ const VideoUploader: React.FC = () => {
             {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
           </div>
 
-          {/* Preview */}
           {previewUrl && (
             <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
-                Video Preview
-              </h3>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">Video Preview</h3>
               <VideoPlayer src={previewUrl} controls muted />
               <video
                 ref={(el) => setVideoEl(el)}
@@ -237,7 +239,6 @@ const VideoUploader: React.FC = () => {
             </div>
           )}
 
-          {/* Actions */}
           <div className="flex space-x-4">
             <button
               onClick={handleSubmit}

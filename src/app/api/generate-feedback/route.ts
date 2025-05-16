@@ -43,34 +43,62 @@ export async function POST(req: NextRequest) {
       "unknown";
     await checkAndIncrement(logs.collection("ips"), ip);
 
-    const { poseSummary, mode } = await req.json();
-    if (!poseSummary || typeof poseSummary !== "string") {
-      throw new Error("Invalid or missing pose summary");
+    // 🆕 Accept pose breakdown fields
+    const {
+      mode,
+      shotType,
+      stance,
+      videoDuration,
+      kneeAngle,
+      elbowAngle,
+      torsoRotation,
+      wristLagTiming,
+      weightTransferScore,
+      footworkScore,
+      headStability,
+      detectedIssues,
+    } = await req.json();
+
+    // Basic validation
+    if (!shotType || typeof kneeAngle !== "number" || typeof elbowAngle !== "number") {
+      throw new Error("Missing required pose metrics");
     }
 
-    const intro =
-      mode === "tactical"
-        ? `You are a world-class tennis strategy coach. Analyze the player's rally summary below and return actionable advice.`
-        : `You are a world-class tennis technique coach. Analyze the player's form summary below and return actionable advice.`;
+    const elitePrompt = `
+You are a world-class tennis coach and biomechanics analyst working with an elite ATP-level player.
 
-    const fullPrompt = `${intro}
+---
 
-Instructions:
-- Identify 3 specific areas the player needs to improve
-- For each area:
-  - Explain why it matters at a high level
-  - Say what the player is currently doing wrong
-  - Suggest 1 actionable tennis drill (with constraints)
-  - Optionally include a supporting fitness drill
+## VIDEO-BASED DATA (INPUT):
 
-Formatting:
-- Use a numbered list
-- Be concise but precise
-- Avoid giving the same feedback repeatedly across sessions
-- Respond like a dedicated, elite-level coach
+- Shot Type: ${shotType}
+- Player Stance: ${stance}
+- Video Duration: ${videoDuration}s
+- Knee Bend Depth (avg): ${kneeAngle}°
+- Elbow Extension Angle (peak): ${elbowAngle}°
+- Torso Rotation (max): ${torsoRotation}°
+- Wrist Lag Timing: ${wristLagTiming}s after load
+- Weight Transfer Efficiency: ${weightTransferScore}/10
+- Footwork Quality: ${footworkScore}/10
+- Head Stability: ${headStability}
+- Error Flags: ${detectedIssues}
 
-Summary:
-"${poseSummary}"
+---
+
+## INSTRUCTIONS:
+
+Analyze the player’s stroke using elite tennis coaching principles and biomechanics. Format your response like this:
+
+1. **Form Summary**
+2. **Why It Matters**
+3. **Strategic Consideration**
+4. **Actionable Drills**
+5. **Quantitative Suggestions**
+
+- Tone: high-performance, professional (ATP level)
+- Use biomechanics terms (kinetic chain, rotational torque, etc.)
+- Be direct, precise, no filler
+- Limit response to 500 words max
 `;
 
     const completion = await openai.chat.completions.create({
@@ -79,9 +107,9 @@ Summary:
         {
           role: "system",
           content:
-            "You are a tennis coach giving elite-level, practical advice based on form or rally summaries.",
+            "You are a tennis coach giving elite-level, practical advice based on pose estimation data.",
         },
-        { role: "user", content: fullPrompt },
+        { role: "user", content: elitePrompt },
       ],
       temperature: 0.8,
       max_tokens: 500,
@@ -89,7 +117,7 @@ Summary:
 
     const fullResponse = completion.choices[0]?.message?.content || "";
 
-    // New improved tip parser (multi-line per item)
+    // Structured tip extraction (optional, keeps your UI behavior the same)
     const matches = fullResponse.match(/(?:^|\n)(\d\..*?)(?=(?:\n\d\.|\n*$))/gs);
     const tips = matches?.map((t) => t.trim()) || [];
 

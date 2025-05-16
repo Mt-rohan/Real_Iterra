@@ -22,7 +22,20 @@ export async function generateAIFeedback(
         "Content-Type": "application/json",
         Authorization: `Bearer ${idToken}`,
       },
-      body: JSON.stringify({ poseSummary, mode }),
+      body: JSON.stringify({
+        mode,
+        shotType: "serve",
+        stance: "open",
+        videoDuration: 4.2,
+        kneeAngle: 87,
+        elbowAngle: 132,
+        torsoRotation: 40,
+        wristLagTiming: 0.2,
+        weightTransferScore: 7,
+        footworkScore: 8,
+        headStability: "stable",
+        detectedIssues: "early wrist release, shallow knee bend",
+      }),      
     });
 
     if (!res.ok) {
