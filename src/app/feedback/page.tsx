@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -30,38 +30,38 @@ export default function MyUploads() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <main className="min-h-screen bg-gray-950 text-white font-sans flex items-center justify-center">
         <LoadingSpinner message="Loading your feedback..." />
-      </div>
+      </main>
     );
   }
 
   if (error || !videoUrl) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-4">
-        <div className="bg-red-50 p-6 rounded-lg border border-red-200 text-center max-w-lg">
-          <h2 className="text-xl font-semibold text-red-700 mb-2">Error</h2>
-          <p className="text-gray-700 mb-4">
+      <main className="min-h-screen bg-gray-950 text-white font-sans flex flex-col items-center justify-center p-4">
+        <div className="bg-gray-800 p-6 rounded-lg border border-red-500 text-center max-w-lg shadow-lg">
+          <h2 className="text-xl font-semibold text-red-400 mb-2">Error</h2>
+          <p className="text-gray-300 mb-4">
             {error || "Missing video data. Please upload a video first."}
           </p>
           <a
             href="/"
-            className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 transition"
+            className="inline-block px-4 py-2 bg-accent text-white rounded-full font-medium hover:bg-accent-dark transition"
           >
-            Back to Home
+            ← Back to Dashboard
           </a>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start py-12 px-4 bg-gray-950 text-white font-sans">
+    <main className="min-h-screen bg-gray-950 text-white font-sans flex flex-col items-center justify-start py-12 px-4">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Your Upload</h1>
+        <h1 className="text-3xl font-bold mb-2">Your Upload</h1>
         <p className="text-lg text-gray-300">Review your personalized feedback</p>
       </div>
-  
+
       <div className="w-full">
         <FeedbackDisplay
           videoUrl={videoUrl}
@@ -69,7 +69,7 @@ export default function MyUploads() {
           tips={tips}
         />
       </div>
-  
+
       {/* Marquee */}
       <div className="w-full mt-12 bg-background-light/5 border-t border-gray-800 py-4 overflow-hidden backdrop-blur-sm">
         <div className="whitespace-nowrap animate-marquee text-text-secondary text-base tracking-wider font-medium flex gap-12 px-6">
@@ -81,4 +81,4 @@ export default function MyUploads() {
       </div>
     </main>
   );
-  
+}
