@@ -1,4 +1,5 @@
 import { getAuth } from "firebase/auth";
+import { PoseMetrics } from "@/lib/extractPoseMetrics";
 
 export interface AIFeedback {
   tips: string[];
@@ -6,8 +7,7 @@ export interface AIFeedback {
 }
 
 export async function generateAIFeedback(
-  poseSummary: string,
-  mode: "technical" | "tactical"
+  data: PoseMetrics
 ): Promise<AIFeedback> {
   try {
     const auth = getAuth();
@@ -22,20 +22,7 @@ export async function generateAIFeedback(
         "Content-Type": "application/json",
         Authorization: `Bearer ${idToken}`,
       },
-      body: JSON.stringify({
-        mode,
-        shotType: "serve",
-        stance: "open",
-        videoDuration: 4.2,
-        kneeAngle: 87,
-        elbowAngle: 132,
-        torsoRotation: 40,
-        wristLagTiming: 0.2,
-        weightTransferScore: 7,
-        footworkScore: 8,
-        headStability: "stable",
-        detectedIssues: "early wrist release, shallow knee bend",
-      }),      
+      body: JSON.stringify(data),
     });
 
     if (!res.ok) {
