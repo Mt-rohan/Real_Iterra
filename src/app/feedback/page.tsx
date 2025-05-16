@@ -56,12 +56,12 @@ export default function MyUploads() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start py-12 px-4">
+    <main className="flex min-h-screen flex-col items-center justify-start py-12 px-4 bg-gray-950 text-white font-sans">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Upload</h1>
-        <p className="text-lg text-gray-600">Review your personalized feedback</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Your Upload</h1>
+        <p className="text-lg text-gray-300">Review your personalized feedback</p>
       </div>
-
+  
       <div className="w-full">
         <FeedbackDisplay
           videoUrl={videoUrl}
@@ -69,17 +69,16 @@ export default function MyUploads() {
           tips={tips}
         />
       </div>
-
-      {/* 🚀 Scrolling Info Marquee */}
-      <div className="w-full mt-12 bg-black py-4 overflow-hidden">
-        <div className="whitespace-nowrap animate-marquee text-white text-lg font-medium tracking-wide">
-          <span className="mx-8">We’ve helped junior players</span>
-          <span className="mx-8">Supported coaches worldwide</span>
-          <span className="mx-8">Affordable AI feedback training</span>
-          <span className="mx-8">Tactical coaching for competitive juniors</span>
-          <span className="mx-8">Boost your game with smart video analysis</span>
+  
+      {/* Marquee */}
+      <div className="w-full mt-12 bg-background-light/5 border-t border-gray-800 py-4 overflow-hidden backdrop-blur-sm">
+        <div className="whitespace-nowrap animate-marquee text-text-secondary text-base tracking-wider font-medium flex gap-12 px-6">
+          <span>Helping junior players |</span>
+          <span>Trusted by coaches worldwide |</span>
+          <span>Affordable AI feedback |</span>
+          <span>Strategic coaching insights</span>
         </div>
       </div>
     </main>
   );
-}
+  
