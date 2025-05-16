@@ -41,3 +41,6 @@ a {
   display: inline-block;
   animation: marquee 25s linear infinite;
 }
+html {
+  scroll-behavior: smooth;
+}

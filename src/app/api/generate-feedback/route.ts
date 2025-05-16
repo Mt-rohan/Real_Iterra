@@ -18,7 +18,7 @@ async function checkAndIncrement(
   await adminDB.runTransaction(async (tx) => {
     const snap = await tx.get(ref);
     const count = (snap.data()?.count as number) || 0;
-    if (count >= 5) throw new Error("Rate limit exceeded");
+    if (count >= 20) throw new Error("Rate limit exceeded");
     tx.set(ref, {
       count: count + 1,
       last: adminFieldValue.serverTimestamp(),

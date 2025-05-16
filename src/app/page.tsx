@@ -29,20 +29,25 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-slate-800 via-gray-800 to-gray-900 bg-[length:200%_200%] animate-gradient-slow text-white pb-20">
-        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-          <h1 className="text-2xl font-black tracking-tight">Iterra</h1>
-          <SignInButton />
-        </div>
-        <div className="text-center mt-10 px-4">
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-3 animate-fade-in-up">
-            Iterra: Your Tennis Coach
-          </h2>
-          <p className="text-lg text-gray-200 animate-fade-in-up delay-100">
-            AI-powered feedback to level up your tennis game
-          </p>
-        </div>
-      </section>
+      {/* Hero Section (cleaned up) */}
+      <section className="relative bg-gradient-to-br from-slate-800 via-gray-800 to-gray-900 bg-[length:200%_200%] animate-gradient-slow text-white pt-32 pb-32">
+  {/* Sign-In Button — top right inside hero */}
+  <div className="absolute top-10 right-6 z-10">
+    <SignInButton />
+  </div>
+
+  <div className="text-center px-4">
+    <h2 className="text-4xl md:text-5xl font-extrabold mb-3 animate-fade-in-up">
+      Iterra: Your Tennis Coach
+    </h2>
+    <p className="text-lg text-gray-200 animate-fade-in-up delay-100">
+      AI-powered feedback to level up your tennis game
+    </p>
+  </div>
+</section>
+
+<div className="h-4 bg-gradient-to-b from-gray-800 to-gray-950" />
+
 
       {/* Upload */}
       <section id="upload" className="py-16 px-6 max-w-3xl mx-auto text-center" data-aos="fade-up">
