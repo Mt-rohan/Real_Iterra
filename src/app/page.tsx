@@ -40,6 +40,17 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* 🚀 Scrolling Info Marquee */}
+      <div className="w-full bg-black py-4 overflow-hidden">
+        <div className="whitespace-nowrap animate-marquee text-white text-lg font-medium tracking-wide">
+          <span className="mx-8">We’ve helped junior players</span>
+          <span className="mx-8">Supported coaches worldwide</span>
+          <span className="mx-8">Affordable AI feedback training</span>
+          <span className="mx-8">Tactical coaching for competitive juniors</span>
+          <span className="mx-8">Boost your game with smart video analysis</span>
+        </div>
+      </div>
     </main>
   );
 }
