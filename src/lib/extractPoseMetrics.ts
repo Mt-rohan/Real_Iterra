@@ -45,9 +45,9 @@ import {
   
     const poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
       baseOptions: {
-        modelAssetPath:
-          "https://storage.googleapis.com/mediapipe-assets/pose_landmarker_full.task",
-        delegate: "GPU",
+        modelAssetBuffer: new Uint8Array(
+          await (await fetch("https://assets.codepen.io/9157346/pose_landmarker_full.task")).arrayBuffer()
+        ),
       },
       runningMode: "VIDEO",
       numPoses: 1,
