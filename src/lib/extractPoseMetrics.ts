@@ -45,8 +45,8 @@ import {
   
     const poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
       baseOptions: {
-        modelAssetPath:
-          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm/pose_landmarker_full.task",
+        modelAssetPath: "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm/pose_landmarker_lite.task"
+,
         delegate: "GPU",
       },
       runningMode: "VIDEO",
