@@ -1,35 +1,33 @@
-// Feedback page component
 "use client";
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import FeedbackDisplay from '../../components/FeedbackDisplay';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import FeedbackDisplay from "../../components/FeedbackDisplay";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
-export default function Feedback() {
+export default function MyUploads() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  const videoUrl = searchParams.get('videoUrl') || '';
-  const poseSummary = searchParams.get('poseSummary') || '';
-  const tipsParam = searchParams.get('tips') || '[]';
-  
+
+  const videoUrl = searchParams.get("videoUrl") || "";
+  const poseSummary = searchParams.get("poseSummary") || "";
+  const tipsParam = searchParams.get("tips") || "[]";
+
   const [tips, setTips] = useState<string[]>([]);
-  
+
   useEffect(() => {
     try {
-      // Parse the tips JSON string
-      const parsedTips = JSON.parse(tipsParam);
-      setTips(Array.isArray(parsedTips) ? parsedTips : []);
-      setLoading(false);
+      const parsed = JSON.parse(tipsParam);
+      setTips(Array.isArray(parsed) ? parsed : []);
     } catch (err) {
-      console.error('Error parsing feedback data:', err);
-      setError('Error loading feedback data. Please try again.');
+      console.error("Error parsing tips JSON:", err);
+      setError("Error loading feedback data. Please try again.");
+    } finally {
       setLoading(false);
     }
   }, [tipsParam]);
-  
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -37,7 +35,7 @@ export default function Feedback() {
       </div>
     );
   }
-  
+
   if (error || !videoUrl) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-4">
@@ -46,9 +44,9 @@ export default function Feedback() {
           <p className="text-gray-700 mb-4">
             {error || "Missing video data. Please upload a video first."}
           </p>
-          <a 
+          <a
             href="/"
-            className="inline-block px-4 py-2 bg-indigo-600 rounded-md text-white font-medium hover:bg-indigo-700"
+            className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md font-medium hover:bg-indigo-700 transition"
           >
             Back to Home
           </a>
@@ -56,20 +54,31 @@ export default function Feedback() {
       </div>
     );
   }
-  
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start py-12 px-4">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Tennis Analysis</h1>
-        <p className="text-lg text-gray-600">Personalized feedback to improve your game</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Upload</h1>
+        <p className="text-lg text-gray-600">Review your personalized feedback</p>
       </div>
-      
+
       <div className="w-full">
-        <FeedbackDisplay 
-          videoUrl={videoUrl} 
+        <FeedbackDisplay
+          videoUrl={videoUrl}
           poseSummary={poseSummary}
           tips={tips}
         />
+      </div>
+
+      {/* 🚀 Scrolling Info Marquee */}
+      <div className="w-full mt-12 bg-black py-4 overflow-hidden">
+        <div className="whitespace-nowrap animate-marquee text-white text-lg font-medium tracking-wide">
+          <span className="mx-8">We’ve helped junior players</span>
+          <span className="mx-8">Supported coaches worldwide</span>
+          <span className="mx-8">Affordable AI feedback training</span>
+          <span className="mx-8">Tactical coaching for competitive juniors</span>
+          <span className="mx-8">Boost your game with smart video analysis</span>
+        </div>
       </div>
     </main>
   );

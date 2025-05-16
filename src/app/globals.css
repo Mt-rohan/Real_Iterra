@@ -28,3 +28,16 @@ a {
   @apply bg-secondary hover:bg-secondary-dark text-white
     font-semibold py-2 px-4 rounded-lg shadow-md transition;
 }
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 25s linear infinite;
+}
