@@ -5,11 +5,9 @@ import { NextResponse } from "next/server";
 import { adminAuth, adminDB, adminFieldValue } from '@/lib/firebase-admin';
 import { OpenAI } from "openai";
 
-// OpenAI config
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const DATE_KEY = () => new Date().toISOString().split("T")[0];
 
-// Firestore-based rate limiter
 async function checkAndIncrement(
   col: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
   id: string
@@ -43,7 +41,6 @@ export async function POST(req: NextRequest) {
       "unknown";
     await checkAndIncrement(logs.collection("ips"), ip);
 
-    // 🆕 Accept pose breakdown fields
     const {
       mode,
       shotType,
@@ -59,7 +56,6 @@ export async function POST(req: NextRequest) {
       detectedIssues,
     } = await req.json();
 
-    // Basic validation
     if (!shotType || typeof kneeAngle !== "number" || typeof elbowAngle !== "number") {
       throw new Error("Missing required pose metrics");
     }
@@ -117,7 +113,6 @@ Analyze the player’s stroke using elite tennis coaching principles and biomech
 
     const fullResponse = completion.choices[0]?.message?.content || "";
 
-    // Structured tip extraction (optional, keeps your UI behavior the same)
     const matches = fullResponse.match(/(?:^|\n)(\d\..*?)(?=(?:\n\d\.|\n*$))/gs);
     const tips = matches?.map((t) => t.trim()) || [];
 
