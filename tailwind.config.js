@@ -1,4 +1,3 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -9,34 +8,49 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#6C5DD3',
-          light: '#8E7AEF',
-          dark: '#4A3ABF',
+          DEFAULT: '#6366F1',
+          light: '#818CF8',
+          dark: '#4F46E5',
         },
         secondary: {
-          DEFAULT: '#FF6F61',
-          light: '#FF8A7A',
-          dark: '#D94E48',
+          DEFAULT: '#F97316',
+          light: '#FB923C',
+          dark: '#EA580C',
         },
         accent: {
-          DEFAULT: '#4FB6C7',
-          light: '#75D1DB',
-          dark: '#2395A2',
+          DEFAULT: '#10B981',
+          light: '#34D399',
+          dark: '#059669',
         },
         background: {
-          light: '#F7F8FD',
-          DEFAULT: '#FFFFFF',
+          DEFAULT: '#0F172A',
+          light: '#1E293B',
+          soft: '#334155',
         },
-        surface: '#FFFFFF',
+        surface: '#1E293B',
         text: {
-          primary: '#1F2937',
-          secondary: '#4B5563',
+          primary: '#F1F5F9',
+          secondary: '#94A3B8',
         },
       },
       fontFamily: {
-        sans: ['"InterVariable"', 'ui-sans-serif', 'system-ui'],
+        sans: ['InterVariable', 'ui-sans-serif', 'system-ui'],
+      },
+      keyframes: {
+        'gradient-move': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'gradient-slow': 'gradient-move 15s ease infinite',
+        'fade-in-up': 'fade-in-up 1s ease-out',
       },
     },
   },
   plugins: [],
-}
+};

@@ -8,27 +8,27 @@ export default function SignInButton() {
   const [user, setUser] = useState(auth.currentUser);
 
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged((u) => setUser(u));
-    return () => unsub();
+    const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
+    return () => unsubscribe();
   }, []);
 
   return (
-    <div className="mb-4 text-right">
+    <>
       {user ? (
         <button
           onClick={() => signOut(auth)}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="px-5 py-2 rounded-full bg-red-500 text-white font-semibold shadow hover:bg-red-600 transition duration-200"
         >
           Sign out
         </button>
       ) : (
         <button
           onClick={() => signInWithPopup(auth, provider)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+          className="px-5 py-2 rounded-full bg-white text-primary font-semibold shadow hover:bg-gray-100 transition duration-200"
         >
           Sign in with Google
         </button>
       )}
-    </div>
+    </>
   );
 }
