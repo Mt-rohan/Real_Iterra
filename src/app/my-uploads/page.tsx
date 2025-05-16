@@ -5,15 +5,14 @@ import { useSearchParams } from "next/navigation";
 import FeedbackDisplay from "../../components/FeedbackDisplay";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
-
 export default function MyUploads() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const videoUrl = searchParams.get("videoUrl") || "";
-  const poseSummary = searchParams.get("poseSummary") || "";
-  const tipsParam = searchParams.get("tips") || "[]";
+  const videoUrl = searchParams?.get("videoUrl") || "";
+  const poseSummary = searchParams?.get("poseSummary") || "";
+  const tipsParam = searchParams?.get("tips") || "[]";
 
   const [tips, setTips] = useState<string[]>([]);
 

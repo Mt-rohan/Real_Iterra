@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -10,9 +10,9 @@ export default function MyUploads() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const videoUrl = searchParams.get("videoUrl") || "";
-  const poseSummary = searchParams.get("poseSummary") || "";
-  const tipsParam = searchParams.get("tips") || "[]";
+  const videoUrl = searchParams?.get("videoUrl") || "";
+  const poseSummary = searchParams?.get("poseSummary") || "";
+  const tipsParam = searchParams?.get("tips") || "[]";
 
   const [tips, setTips] = useState<string[]>([]);
 
@@ -70,7 +70,6 @@ export default function MyUploads() {
         />
       </div>
 
-      {/* Marquee */}
       <div className="w-full mt-12 bg-background-light/5 border-t border-gray-800 py-4 overflow-hidden backdrop-blur-sm">
         <div className="whitespace-nowrap animate-marquee text-text-secondary text-base tracking-wider font-medium flex gap-12 px-6">
           <span>Helping junior players |</span>

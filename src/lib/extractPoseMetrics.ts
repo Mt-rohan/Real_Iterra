@@ -1,9 +1,12 @@
+// src/lib/extractPoseMetrics.ts
+
 import {
     FilesetResolver,
     PoseLandmarker,
   } from "@mediapipe/tasks-vision";
   
   export interface PoseMetrics {
+    mode: "technical" | "tactical";
     shotType: string;
     stance: string;
     videoDuration: number;
@@ -15,6 +18,10 @@ import {
     footworkScore: number;
     headStability: string;
     detectedIssues: string;
+  }
+  
+  export interface PoseAnalysisResult extends PoseMetrics {
+    summary: string;
   }
   
   function getAngle(
@@ -31,7 +38,7 @@ import {
     return (angle * 180) / Math.PI;
   }
   
-  export async function extractPoseMetrics(video: HTMLVideoElement): Promise<PoseMetrics> {
+  export async function extractPoseMetrics(video: HTMLVideoElement): Promise<PoseAnalysisResult> {
     const vision = await FilesetResolver.forVisionTasks(
       "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
     );
@@ -58,16 +65,15 @@ import {
   
     for (let i = 0; i < frameCount; i++) {
       video.currentTime = i * interval;
-      await new Promise((res) => video.onseeked = res);
+      await new Promise((res) => (video.onseeked = res));
   
       const result = await poseLandmarker.detectForVideo(video, performance.now());
       const lm = result.landmarks?.[0];
       if (!lm) continue;
   
-      // Left side only
-      const knee = getAngle(lm[23], lm[25], lm[27]); // hip-knee-ankle
-      const elbow = getAngle(lm[11], lm[13], lm[15]); // shoulder-elbow-wrist
-      const torso = Math.abs(lm[11].x - lm[12].x) * 100; // approx. shoulder separation
+      const knee = getAngle(lm[23], lm[25], lm[27]);
+      const elbow = getAngle(lm[11], lm[13], lm[15]);
+      const torso = Math.abs(lm[11].x - lm[12].x) * 100;
   
       angleSamples.knee.push(knee);
       angleSamples.elbow.push(elbow);
@@ -77,17 +83,19 @@ import {
     const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length;
   
     return {
-      shotType: "forehand", // could be dynamically chosen
+      summary: "Extracted pose data from video.",
+      mode: "technical",
+      shotType: "forehand",
       stance: "open",
       videoDuration: duration,
       kneeAngle: Math.round(avg(angleSamples.knee)),
       elbowAngle: Math.round(avg(angleSamples.elbow)),
       torsoRotation: Math.round(avg(angleSamples.torso)),
-      wristLagTiming: 0.2, // placeholder or future computed
-      weightTransferScore: 7, // placeholder — can infer from motion
-      footworkScore: 8, // placeholder — can improve later
-      headStability: "stable", // placeholder or rule-based
-      detectedIssues: "early wrist release, shallow knee bend", // placeholder
+      wristLagTiming: 0.2,
+      weightTransferScore: 7,
+      footworkScore: 8,
+      headStability: "stable",
+      detectedIssues: "early wrist release, shallow knee bend",
     };
   }
   

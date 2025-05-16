@@ -15,13 +15,11 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import {
   initializeTF,
   loadPoseDetectionModel,
-  extractVideoFrames,
-  analyzePoses,
 } from "@/lib/poseDetection";
+import { extractPoseMetrics, PoseAnalysisResult } from "@/lib/extractPoseMetrics";
 import { generateAIFeedback } from "@/lib/openai";
 import VideoPlayer from "./VideoPlayer";
 import LoadingSpinner from "./LoadingSpinner";
-import { PoseAnalysisResult } from "@/types";
 
 const VideoUploader: React.FC = () => {
   const [user, setUser] = useState<User | null>(auth.currentUser);
@@ -81,36 +79,21 @@ const VideoUploader: React.FC = () => {
       setError(null);
       setLoading(true);
 
-      // 1) Upload to Firebase Storage
       setLoadingMessage("Uploading video...");
       const downloadUrl = await uploadVideo(file);
 
-      // 2) Pose detection
       setLoadingMessage("Analyzing tennis form...");
       if (!videoEl) throw new Error("Video element not available");
       await initializeTF();
-      const detector = await loadPoseDetectionModel();
-      const frames = await extractVideoFrames(videoEl, 50);
-      const poseResult: PoseAnalysisResult = await analyzePoses(detector, frames);
+      await loadPoseDetectionModel();
+      const poseResult: PoseAnalysisResult = await extractPoseMetrics(videoEl);
 
-      // 3) AI feedback with full pose metrics
       setLoadingMessage("Generating coaching tips...");
       const aiFeedback = await generateAIFeedback({
+        ...poseResult,
         mode,
-        shotType: "forehand",
-        stance: "open",
-        videoDuration: videoEl.duration,
-        kneeAngle: poseResult.kneeAngle ?? 85,
-        elbowAngle: poseResult.elbowAngle ?? 130,
-        torsoRotation: poseResult.torsoRotation ?? 35,
-        wristLagTiming: 0.2,
-        weightTransferScore: 7,
-        footworkScore: 8,
-        headStability: "stable",
-        detectedIssues: poseResult.detectedIssues || "early wrist release, shallow knee bend",
       });
 
-      // 4) Save to Firestore
       const uploadRef = doc(db, "users", user.uid, "uploads", Date.now().toString());
       await setDoc(uploadRef, {
         mode,
@@ -120,7 +103,6 @@ const VideoUploader: React.FC = () => {
         createdAt: serverTimestamp(),
       });
 
-      // 5) Redirect to feedback page
       const params = new URLSearchParams({
         videoUrl: downloadUrl,
         poseSummary: poseResult.summary,
